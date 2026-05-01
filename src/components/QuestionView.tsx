@@ -1,0 +1,119 @@
+import { useEffect, useRef, useState, useCallback } from 'react';
+import type { Question, FeedbackState } from '../types';
+import '../lit-components/index';
+
+interface Props {
+  question: Question;
+  onAnswer: (value: number) => void;
+  feedback: FeedbackState;
+}
+
+export function QuestionView({ question, onAnswer, feedback }: Props) {
+  const [selectedValue, setSelectedValue] = useState<number | null>(null);
+  const dropZoneRef = useRef<HTMLElement | null>(null);
+  const cardRefs = useRef<Map<number, HTMLElement>>(new Map());
+
+  useEffect(() => {
+    setSelectedValue(null);
+  }, [question.id]);
+
+  useEffect(() => {
+    const el = dropZoneRef.current;
+    if (!el) return;
+
+    const onDropped = (e: Event) => {
+      const detail = (e as CustomEvent<{ value: number }>).detail;
+      onAnswer(detail.value);
+      setSelectedValue(null);
+    };
+    const onTapped = () => {
+      if (selectedValue !== null) {
+        onAnswer(selectedValue);
+        setSelectedValue(null);
+      }
+    };
+
+    el.addEventListener('answer-dropped', onDropped);
+    el.addEventListener('drop-zone-tapped', onTapped);
+    return () => {
+      el.removeEventListener('answer-dropped', onDropped);
+      el.removeEventListener('drop-zone-tapped', onTapped);
+    };
+  }, [selectedValue, onAnswer]);
+
+  useEffect(() => {
+    const handlers: [HTMLElement, (e: Event) => void][] = [];
+    cardRefs.current.forEach((el, value) => {
+      const handler = () => setSelectedValue(prev => prev === value ? null : value);
+      el.addEventListener('card-selected', handler);
+      handlers.push([el, handler]);
+    });
+    return () => {
+      handlers.forEach(([el, h]) => el.removeEventListener('card-selected', h));
+    };
+  }, [question.id]);
+
+  const setCardRef = useCallback((value: number) => (el: HTMLElement | null) => {
+    if (el) cardRefs.current.set(value, el);
+    else cardRefs.current.delete(value);
+  }, []);
+
+  const { a, b, operator, animal, mode, choices } = question;
+  const questionSize = mode === 'pictures' && (a > 5 || b > 5) ? 'sm' : 'md';
+
+  return (
+    <div className="question-view">
+      <div className="math-question">
+        <div className="q-group">
+          {/* Only show count label in pictures mode — numbers mode shows it inside animal-display */}
+          {mode === 'pictures' && <div className="q-count">{a}</div>}
+          <animal-display animal={animal} count={a} mode={mode} size={questionSize} />
+        </div>
+
+        <div className="q-operator">{operator}</div>
+
+        <div className="q-group">
+          {mode === 'pictures' && <div className="q-count">{b}</div>}
+          <animal-display animal={animal} count={b} mode={mode} size={questionSize} />
+        </div>
+
+        <div className="q-operator">=</div>
+
+        <drop-zone
+          ref={(el: HTMLElement | null) => { dropZoneRef.current = el; }}
+          active={selectedValue !== null}
+          feedback={feedback}
+        />
+      </div>
+
+      {feedback === 'correct' && (
+        <div className="feedback-msg correct">
+          <span className="feedback-big">🎉 Amazing!</span>
+        </div>
+      )}
+      {feedback === 'wrong' && (
+        <div className="feedback-msg wrong">
+          <span className="feedback-big">💪 Try again!</span>
+        </div>
+      )}
+
+      <div className="answer-cards">
+        {choices.map((choice) => (
+          <answer-card
+            key={choice}
+            ref={setCardRef(choice)}
+            value={choice}
+            animal={animal}
+            mode={mode}
+            selected={selectedValue === choice}
+            disabled={feedback === 'correct'}
+          />
+        ))}
+      </div>
+
+      {selectedValue !== null && feedback === 'idle' && (
+        <p className="tap-hint">Tap the drop zone to check your answer!</p>
+      )}
+    </div>
+  );
+}
