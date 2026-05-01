@@ -367,7 +367,7 @@ Error generating stack: `+a.message+`
       </div>
     `}};$t.styles=Lu`
     :host {
-      display: inline-block;
+      display: block;
       user-select: none;
       -webkit-user-select: none;
       touch-action: none;
@@ -376,9 +376,11 @@ Error generating stack: `+a.message+`
       background: #fff;
       border: 4px solid #e0e7ff;
       border-radius: 20px;
-      padding: 12px 16px;
-      min-width: 90px;
+      padding: 12px;
+      width: 100%;
+      height: 100%;
       min-height: 90px;
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
       align-items: center;
