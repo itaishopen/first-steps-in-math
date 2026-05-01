@@ -18,6 +18,7 @@ const he = {
 
   feedbackCorrect: 'מדהים!🎉 ',
   feedbackWrong: 'נסה שוב!💪 ',
+  dropHere: 'שחרר כאן!',
   tapHint: 'הקש על אזור של התשובה כדי לבדוק עם היא נכונה!',
 
   menuBack: 'תפריט ←',

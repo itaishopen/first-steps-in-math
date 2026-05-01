@@ -18,6 +18,7 @@ declare namespace React {
       'drop-zone': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
         active?: boolean;
         feedback?: 'idle' | 'correct' | 'wrong';
+        label?: string;
       };
       'kid-button': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
         variant?: 'primary' | 'secondary' | 'danger' | 'success';

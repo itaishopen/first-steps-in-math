@@ -84,6 +84,7 @@ export function QuestionView({ question, onAnswer, feedback }: Props) {
           ref={(el: HTMLElement | null) => { dropZoneRef.current = el; }}
           active={selectedValue !== null}
           feedback={feedback}
+          label={t('dropHere')}
         />
       </div>
 

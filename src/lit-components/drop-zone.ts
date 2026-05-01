@@ -7,6 +7,7 @@ type FeedbackState = 'idle' | 'correct' | 'wrong';
 export class DropZone extends LitElement {
   @property({ type: Boolean }) active = false;
   @property({ type: String }) feedback: FeedbackState = 'idle';
+  @property({ type: String }) label = 'Drop here!';
 
   static styles = css`
     :host {
@@ -113,7 +114,7 @@ export class DropZone extends LitElement {
         @pointerup=${this.onPointerUp}
       >
         ${this.feedback === 'idle'
-          ? html`<span class="label">Drop<br/>here!</span>`
+          ? html`<span class="label">${this.label}</span>`
           : feedbackEmoji
           ? html`<span class="emoji">${feedbackEmoji}</span>`
           : html``

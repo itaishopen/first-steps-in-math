@@ -18,6 +18,7 @@ const nl = {
 
   feedbackCorrect: '🎉 Geweldig!',
   feedbackWrong: '💪 Probeer opnieuw!',
+  dropHere: 'Sleep hier!',
   tapHint: 'Tik op de dropzone om je antwoord te controleren!',
 
   menuBack: '← Menu',

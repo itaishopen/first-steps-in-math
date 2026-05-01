@@ -21,6 +21,7 @@ const en = {
   // QuestionView
   feedbackCorrect: '🎉 Amazing!',
   feedbackWrong: '💪 Try again!',
+  dropHere: 'Drop here!',
   tapHint: 'Tap the drop zone to check your answer!',
 
   // EndScreen
