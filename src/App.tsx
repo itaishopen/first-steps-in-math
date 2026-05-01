@@ -6,6 +6,7 @@ import { GameScreen } from './components/GameScreen';
 import { EndScreen } from './components/EndScreen';
 import { Leaderboard } from './components/Leaderboard';
 import { CustomGameSettings } from './components/CustomGameSettings';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('start');
@@ -35,6 +36,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      <LanguageSwitcher />
       <div className="app-card">
         {screen === 'start' && (
           <StartScreen

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { topTen, clearLeaderboard } from '../utils/storage';
 import type { LeaderboardEntry } from '../types';
 import { ConfirmModal } from './ConfirmModal';
@@ -8,14 +9,14 @@ interface Props {
   onBack: () => void;
 }
 
-const DIFF_LABELS: Record<string, string> = {
-  easy: '🌟 Easy',
-  medium: '⭐⭐ Medium',
-  hard: '🔥 Hard',
-  custom: '⚙️ Custom',
-};
-
 export function Leaderboard({ onBack }: Props) {
+  const { t } = useTranslation();
+  const diffLabels: Record<string, string> = {
+    easy: t('diffLabelEasy'),
+    medium: t('diffLabelMedium'),
+    hard: t('diffLabelHard'),
+    custom: t('diffLabelCustom'),
+  };
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [showConfirm, setShowConfirm] = useState(false);
   const backRef = useRef<HTMLElement | null>(null);
@@ -44,20 +45,20 @@ export function Leaderboard({ onBack }: Props) {
   return (
     <>
       <div className="leaderboard-screen">
-        <h2 className="lb-title">🏆 Leaderboard</h2>
+        <h2 className="lb-title">{t('leaderboardTitle')}</h2>
 
         {entries.length === 0 ? (
-          <div className="lb-empty">No scores yet! Be the first to play! 🎮</div>
+          <div className="lb-empty">{t('noScores')}</div>
         ) : (
           <div className="lb-table-wrap">
             <table className="lb-table">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Score</th>
-                  <th>Level</th>
-                  <th>Date</th>
+                  <th>{t('colRank')}</th>
+                  <th>{t('colName')}</th>
+                  <th>{t('colScore')}</th>
+                  <th>{t('colLevel')}</th>
+                  <th>{t('colDate')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -68,7 +69,7 @@ export function Leaderboard({ onBack }: Props) {
                     </td>
                     <td className="lb-name">{e.playerName}</td>
                     <td className="lb-score">{e.score}/{e.total}</td>
-                    <td className="lb-diff">{DIFF_LABELS[e.difficulty] ?? e.difficulty}</td>
+                    <td className="lb-diff">{diffLabels[e.difficulty] ?? e.difficulty}</td>
                     <td className="lb-date">{e.date}</td>
                   </tr>
                 ))}
@@ -79,11 +80,11 @@ export function Leaderboard({ onBack }: Props) {
 
         <div className="lb-buttons">
           <kid-button ref={(el: HTMLElement | null) => { backRef.current = el; }} variant="primary">
-            ← Back
+            {t('back')}
           </kid-button>
           {entries.length > 0 && (
             <kid-button ref={(el: HTMLElement | null) => { clearRef.current = el; }} variant="danger">
-              🗑️ Clear
+              {t('clearScores')}
             </kid-button>
           )}
         </div>
@@ -91,7 +92,7 @@ export function Leaderboard({ onBack }: Props) {
 
       {showConfirm && (
         <ConfirmModal
-          message="Go back to the main menu?"
+          message={t('backToMenu')}
           onConfirm={onBack}
           onCancel={() => setShowConfirm(false)}
         />

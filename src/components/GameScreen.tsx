@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { GameSettings, Question, FeedbackState } from '../types';
 import { generateQuestions } from '../utils/game';
 import { playSuccess, playFail, playFinish, unlockAudio } from '../utils/sounds';
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function GameScreen({ settings, onGameEnd, onBack }: Props) {
+  const { t } = useTranslation();
   const [questions] = useState<Question[]>(() => generateQuestions(settings));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -53,15 +55,15 @@ export function GameScreen({ settings, onGameEnd, onBack }: Props) {
     <>
       <div className="game-screen">
         <div className="game-header">
-          <div className="score-display">
-            <span className="score-label">Score</span>
+          <div className="score-display" dir="ltr">
+            <span className="score-label">{t('score')}</span>
             <span className="score-value">{score} / {total}</span>
           </div>
-          <div className="question-counter">
-            Question {currentIndex + 1} of {total}
+          <div className="question-counter" dir="ltr">
+            {t('questionCounter', { n: currentIndex + 1, total })}
           </div>
           <button className="back-btn" onClick={() => setShowConfirm(true)}>
-            ✕ Quit
+            {t('quit')}
           </button>
         </div>
 
@@ -78,7 +80,7 @@ export function GameScreen({ settings, onGameEnd, onBack }: Props) {
 
       {showConfirm && (
         <ConfirmModal
-          message="Are you sure you want to quit? Your progress will be lost! 😢"
+          message={t('quitConfirm')}
           onConfirm={onBack}
           onCancel={() => setShowConfirm(false)}
         />

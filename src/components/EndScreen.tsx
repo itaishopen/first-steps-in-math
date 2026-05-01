@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { GameSettings } from '../types';
 import { saveEntry } from '../utils/storage';
 import { ConfirmModal } from './ConfirmModal';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export function EndScreen({ score, total, settings, onPlayAgain, onLeaderboard, onBack }: Props) {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [saved, setSaved] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -58,15 +60,15 @@ export function EndScreen({ score, total, settings, onPlayAgain, onLeaderboard, 
   const pct = total > 0 ? Math.round((score / total) * 100) : 0;
   const stars = pct >= 90 ? 3 : pct >= 60 ? 2 : 1;
   const message =
-    stars === 3 ? 'Amazing! You are a Math Star! 🌟' :
-    stars === 2 ? 'Great job! Keep it up! 🎉' :
-    'Nice try! Practice makes perfect! 💪';
+    stars === 3 ? t('msgStar') :
+    stars === 2 ? t('msgGreat') :
+    t('msgNice');
 
   return (
     <>
       <div className="end-screen">
         <button className="back-btn" onClick={() => setShowConfirm(true)}>
-          ← Menu
+          {t('menuBack')}
         </button>
 
         <div className="end-stars">
@@ -75,7 +77,7 @@ export function EndScreen({ score, total, settings, onPlayAgain, onLeaderboard, 
           ))}
         </div>
 
-        <h2 className="end-title">Game Over!</h2>
+        <h2 className="end-title">{t('gameOver')}</h2>
         <p className="end-message">{message}</p>
 
         <div className="score-card">
@@ -85,11 +87,11 @@ export function EndScreen({ score, total, settings, onPlayAgain, onLeaderboard, 
 
         {!saved ? (
           <div className="save-section">
-            <label className="name-label">Enter your name to save your score:</label>
+            <label className="name-label">{t('enterName')}</label>
             <input
               className="name-input"
               type="text"
-              placeholder="Your name..."
+              placeholder={t('namePlaceholder')}
               maxLength={20}
               value={name}
               onChange={e => setName(e.target.value)}
@@ -100,11 +102,11 @@ export function EndScreen({ score, total, settings, onPlayAgain, onLeaderboard, 
               variant="success"
               disabled={!name.trim()}
             >
-              💾 Save Score
+              {t('saveScore')}
             </kid-button>
           </div>
         ) : (
-          <div className="saved-msg">✅ Score saved! Great job, {name}!</div>
+          <div className="saved-msg">{t('scoreSaved', { name })}</div>
         )}
 
         <div className="end-buttons">
@@ -112,20 +114,20 @@ export function EndScreen({ score, total, settings, onPlayAgain, onLeaderboard, 
             ref={(el: HTMLElement | null) => { playRef.current = el; }}
             variant="primary"
           >
-            🔄 Play Again
+            {t('playAgain')}
           </kid-button>
           <kid-button
             ref={(el: HTMLElement | null) => { lbRef.current = el; }}
             variant="secondary"
           >
-            🏆 Leaderboard
+            {t('goToLeaderboard')}
           </kid-button>
         </div>
       </div>
 
       {showConfirm && (
         <ConfirmModal
-          message="Go back to the main menu?"
+          message={t('backToMenu')}
           onConfirm={onBack}
           onCancel={() => setShowConfirm(false)}
         />

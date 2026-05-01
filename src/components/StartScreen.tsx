@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Difficulty } from '../types';
 import '../lit-components/index';
 
@@ -8,19 +9,20 @@ interface Props {
   onLeaderboard: () => void;
 }
 
-const DIFFICULTIES: { key: Difficulty; label: string; emoji: string; desc: string; color: string }[] = [
-  { key: 'easy', label: 'Easy', emoji: '🐱', desc: 'Numbers 0–10 with pictures', color: '#bbf7d0' },
-  { key: 'medium', label: 'Medium', emoji: '🐘', desc: 'Numbers 5–20 with pictures', color: '#bfdbfe' },
-  { key: 'hard', label: 'Hard', emoji: '🦁', desc: 'Numbers 10–50 with digits', color: '#fde68a' },
-];
-
 export function StartScreen({ onPlay, onCustom, onLeaderboard }: Props) {
+  const { t } = useTranslation();
   const btnRefs = useRef<(HTMLElement | null)[]>([]);
   const customRef = useRef<HTMLElement | null>(null);
   const lbRef = useRef<HTMLElement | null>(null);
 
+  const difficulties: { key: Difficulty; labelKey: string; descKey: string; emoji: string; color: string }[] = [
+    { key: 'easy', labelKey: 'diffEasyLabel', descKey: 'diffEasyDesc', emoji: '🐱', color: '#bbf7d0' },
+    { key: 'medium', labelKey: 'diffMediumLabel', descKey: 'diffMediumDesc', emoji: '🐘', color: '#bfdbfe' },
+    { key: 'hard', labelKey: 'diffHardLabel', descKey: 'diffHardDesc', emoji: '🦁', color: '#fde68a' },
+  ];
+
   useEffect(() => {
-    DIFFICULTIES.forEach((d, i) => {
+    difficulties.forEach((d, i) => {
       const el = btnRefs.current[i];
       if (!el) return;
       const handler = () => onPlay(d.key);
@@ -41,21 +43,21 @@ export function StartScreen({ onPlay, onCustom, onLeaderboard }: Props) {
     <div className="start-screen">
       <div className="title-area">
         <div className="title-animals">🦄 🐰 🦁</div>
-        <h1 className="game-title">Math Safari!</h1>
-        <p className="game-subtitle">Count animals, drag the answer!</p>
+        <h1 className="game-title">{t('gameTitle')}</h1>
+        <p className="game-subtitle">{t('gameSubtitle')}</p>
       </div>
 
       <div className="difficulty-grid">
-        {DIFFICULTIES.map((d, i) => (
+        {difficulties.map((d, i) => (
           <div key={d.key} className="difficulty-card" style={{ background: d.color }}>
             <div className="diff-emoji">{d.emoji}</div>
-            <div className="diff-label">{d.label}</div>
-            <div className="diff-desc">{d.desc}</div>
+            <div className="diff-label">{t(d.labelKey)}</div>
+            <div className="diff-desc">{t(d.descKey)}</div>
             <kid-button
               ref={(el: HTMLElement | null) => { btnRefs.current[i] = el; }}
               variant="primary"
             >
-              Play!
+              {t('play')}
             </kid-button>
           </div>
         ))}
@@ -66,13 +68,13 @@ export function StartScreen({ onPlay, onCustom, onLeaderboard }: Props) {
           ref={(el: HTMLElement | null) => { customRef.current = el; }}
           variant="secondary"
         >
-          ⚙️ Custom Game
+          {t('customGame')}
         </kid-button>
         <kid-button
           ref={(el: HTMLElement | null) => { lbRef.current = el; }}
           variant="secondary"
         >
-          🏆 Leaderboard
+          {t('leaderboard')}
         </kid-button>
       </div>
     </div>

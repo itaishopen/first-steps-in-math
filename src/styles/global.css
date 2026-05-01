@@ -31,6 +31,42 @@ body {
   padding: 16px;
 }
 
+.lang-switcher {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 100;
+}
+
+[dir="rtl"] .lang-switcher {
+  right: auto;
+  left: 12px;
+}
+
+.lang-btn {
+  background: rgba(255,255,255,0.85);
+  border: 2px solid #a78bfa;
+  border-radius: 10px;
+  padding: 4px 10px;
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: #7c3aed;
+  transition: background 0.15s, color 0.15s;
+}
+
+.lang-btn.active {
+  background: #7c3aed;
+  color: #fff;
+}
+
+.lang-btn:hover:not(.active) {
+  background: #ede9fe;
+}
+
 #root {
   width: 100%;
   min-height: 100vh;
@@ -227,10 +263,13 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 6px;
+  border: 2px solid #4f46e5;
+  border-radius: 25px;
+  padding: 5px;
 }
 
 .q-count {
-  font-size: 1.6em;
+  font-size: 0.8em;
   font-weight: 900;
   color: #4f46e5;
   line-height: 1;

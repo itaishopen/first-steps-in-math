@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Question, FeedbackState } from '../types';
 import '../lit-components/index';
 
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function QuestionView({ question, onAnswer, feedback }: Props) {
+  const { t } = useTranslation();
   const [selectedValue, setSelectedValue] = useState<number | null>(null);
   const dropZoneRef = useRef<HTMLElement | null>(null);
   const cardRefs = useRef<Map<number, HTMLElement>>(new Map());
@@ -63,18 +65,17 @@ export function QuestionView({ question, onAnswer, feedback }: Props) {
 
   return (
     <div className="question-view">
-      <div className="math-question">
+      <div className="math-question" dir="ltr">
         <div className="q-group">
-          {/* Only show count label in pictures mode — numbers mode shows it inside animal-display */}
-          {mode === 'pictures' && <div className="q-count">{a}</div>}
           <animal-display animal={animal} count={a} mode={mode} size={questionSize} />
+          {mode === 'pictures' && <div className="q-count">{a}</div>}
         </div>
 
         <div className="q-operator">{operator}</div>
 
         <div className="q-group">
-          {mode === 'pictures' && <div className="q-count">{b}</div>}
           <animal-display animal={animal} count={b} mode={mode} size={questionSize} />
+          {mode === 'pictures' && <div className="q-count">{b}</div>}
         </div>
 
         <div className="q-operator">=</div>
@@ -88,12 +89,12 @@ export function QuestionView({ question, onAnswer, feedback }: Props) {
 
       {feedback === 'correct' && (
         <div className="feedback-msg correct">
-          <span className="feedback-big">🎉 Amazing!</span>
+          <span className="feedback-big">{t('feedbackCorrect')}</span>
         </div>
       )}
       {feedback === 'wrong' && (
         <div className="feedback-msg wrong">
-          <span className="feedback-big">💪 Try again!</span>
+          <span className="feedback-big">{t('feedbackWrong')}</span>
         </div>
       )}
 
@@ -112,7 +113,7 @@ export function QuestionView({ question, onAnswer, feedback }: Props) {
       </div>
 
       {selectedValue !== null && feedback === 'idle' && (
-        <p className="tap-hint">Tap the drop zone to check your answer!</p>
+        <p className="tap-hint">{t('tapHint')}</p>
       )}
     </div>
   );

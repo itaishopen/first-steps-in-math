@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { GameSettings, DisplayMode, Operator } from '../types';
 import { ConfirmModal } from './ConfirmModal';
 import '../lit-components/index';
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function CustomGameSettings({ onStart, onBack }: Props) {
+  const { t } = useTranslation();
   const [min, setMin] = useState(1);
   const [max, setMax] = useState(10);
   const [questionCount, setQuestionCount] = useState(10);
@@ -41,9 +43,9 @@ export function CustomGameSettings({ onStart, onBack }: Props) {
   };
 
   const handleStart = () => {
-    if (min < 1) { setError('Minimum must be at least 1.'); return; }
-    if (min > max) { setError('Minimum cannot be greater than maximum.'); return; }
-    if (questionCount < 1 || questionCount > 30) { setError('Questions must be between 1 and 30.'); return; }
+    if (min < 1) { setError(t('errorMinOne')); return; }
+    if (min > max) { setError(t('errorMinMax')); return; }
+    if (questionCount < 1 || questionCount > 30) { setError(t('errorQuestions')); return; }
     setError('');
     onStart({ difficulty: 'custom', min, max, questionCount, mode, operators });
   };
@@ -51,43 +53,43 @@ export function CustomGameSettings({ onStart, onBack }: Props) {
   return (
     <>
       <div className="custom-screen">
-        <h2 className="custom-title">⚙️ Custom Game</h2>
+        <h2 className="custom-title">{t('customTitle')}</h2>
 
         <div className="settings-form">
           <div className="setting-row">
-            <label>Minimum number</label>
+            <label>{t('minNumber')}</label>
             <input type="number" min={1} max={max} value={min}
               onChange={e => setMin(Math.max(1, Number(e.target.value)))}
               className="setting-input" />
           </div>
           <div className="setting-row">
-            <label>Maximum number</label>
+            <label>{t('maxNumber')}</label>
             <input type="number" min={min} max={999} value={max}
               onChange={e => setMax(Math.max(min, Number(e.target.value)))}
               className="setting-input" />
           </div>
           <div className="setting-row">
-            <label>Questions</label>
+            <label>{t('questions')}</label>
             <input type="number" min={1} max={30} value={questionCount}
               onChange={e => setQuestionCount(Math.min(30, Math.max(1, Number(e.target.value))))}
               className="setting-input" />
           </div>
           <div className="setting-row">
-            <label>Operators</label>
+            <label>{t('operators')}</label>
             <div className="mode-toggle">
               <button className={`mode-btn ${operators.includes('+') ? 'active' : ''}`}
-                onClick={() => toggleOperator('+')}>➕ Add</button>
+                onClick={() => toggleOperator('+')}>{t('opAdd')}</button>
               <button className={`mode-btn ${operators.includes('-') ? 'active' : ''}`}
-                onClick={() => toggleOperator('-')}>➖ Sub</button>
+                onClick={() => toggleOperator('-')}>{t('opSub')}</button>
             </div>
           </div>
           <div className="setting-row">
-            <label>Display</label>
+            <label>{t('display')}</label>
             <div className="mode-toggle">
               <button className={`mode-btn ${mode === 'pictures' ? 'active' : ''}`}
-                onClick={() => setMode('pictures')}>🐱 Pictures</button>
+                onClick={() => setMode('pictures')}>{t('displayPictures')}</button>
               <button className={`mode-btn ${mode === 'numbers' ? 'active' : ''}`}
-                onClick={() => setMode('numbers')}>🔢 Numbers</button>
+                onClick={() => setMode('numbers')}>{t('displayNumbers')}</button>
             </div>
           </div>
         </div>
@@ -96,17 +98,17 @@ export function CustomGameSettings({ onStart, onBack }: Props) {
 
         <div className="custom-buttons">
           <kid-button ref={(el: HTMLElement | null) => { startRef.current = el; }} variant="primary">
-            🚀 Start Game
+            {t('startGame')}
           </kid-button>
           <kid-button ref={(el: HTMLElement | null) => { backRef.current = el; }} variant="secondary">
-            ← Back
+            {t('back')}
           </kid-button>
         </div>
       </div>
 
       {showConfirm && (
         <ConfirmModal
-          message="Go back to the main menu?"
+          message={t('backToMenu')}
           onConfirm={onBack}
           onCancel={() => setShowConfirm(false)}
         />
